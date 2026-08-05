@@ -50,7 +50,7 @@ I built this project to answer three questions a real RCM team asks:
 
 I titled this **"Eligibility & Coverage Leakage Dashboard,"** built in Power BI Desktop using Import mode, sourced from gold Delta tables exported as CSV.
 
-<img width="1517" height="802" alt="image" src="https://github.com/user-attachments/assets/d00fd392-2299-49d2-9a85-5be26159c8e2" />
+<img width="1517" height="802" alt="Screenshot 2026-08-05 at 2 21 14 PM" src="https://github.com/user-attachments/assets/4240e1f4-ac93-4f1a-b070-c1ac29e9b5b1" />
 
 
 - **KPI cards:** Total ineligible visits, total paid claims on ineligible visits, denied claims missing a reason
@@ -66,7 +66,7 @@ I titled this **"Eligibility & Coverage Leakage Dashboard,"** built in Power BI 
 **Source data:** `members`, `patient_visits`, `claims` tables under `workspace.default`
 
 ### 1. Determine coverage status
-\`\`\`python
+```python
 from pyspark.sql import functions as F
 
 df_elig = df_members.withColumn(
@@ -74,11 +74,11 @@ df_elig = df_members.withColumn(
     F.when(F.col("termination_date").isNull(), "Current")
      .otherwise("Terminated")
 )
-\`\`\`
+```
 
 ### 2. Data quality checks on registration fields
 I used a two-level flagging approach: individual field-level flags, plus a composite roll-up flag.
-\`\`\`python
+```python
 df_dq = df_elig.withColumn(
     "missing_phone", F.col("phone").isNull()
 ).withColumn(
@@ -91,14 +91,14 @@ df_dq = df_elig.withColumn(
     "missing_critical_info",
     F.col("missing_phone") | F.col("missing_email") | F.col("missing_zip") | F.col("missing_dob")
 )
-\`\`\`
+```
 
 ### 3. Eligibility-at-time-of-service check
 This is the core RCM logic: was the member actually active on their visit date, not just active *today*?
-\`\`\`python
+```python
 df_visits = spark.table("default.patient_visits")
 
-df_check = df_visits.join(df_elig, "member_id") \\
+df_check = df_visits.join(df_elig, "member_id") \
     .withColumn(
         "was_eligible_at_visit",
         F.when(
@@ -107,15 +107,15 @@ df_check = df_visits.join(df_elig, "member_id") \\
             True
         ).otherwise(False)
     )
-\`\`\`
+```
 
 ### 4. Financial leakage analysis
 I joined the ineligible visits to claims to check whether they were paid despite the eligibility gap.
-\`\`\`python
+```python
 v = df_ineligible_visits.alias("v")
 c = df_claims.alias("c")
 
-df_leakage_check = v.join(c, v.visit_id == c.visit_id, "left") \\
+df_leakage_check = v.join(c, v.visit_id == c.visit_id, "left") \
     .select(
         "v.visit_id", "v.member_id", "v.member_name", "v.visit_date",
         "c.claim_status", "c.denial_reason", "c.paid_amount"
@@ -125,14 +125,14 @@ df_leakage_summary = df_leakage_check.groupBy("claim_status").agg(
     F.count("*").alias("claim_count"),
     F.sum(F.coalesce(F.col("paid_amount"), F.lit(0.0))).alias("total_paid_amount")
 )
-\`\`\`
+```
 
 ### 5. Denial documentation gap check
-\`\`\`python
+```python
 df_leakage_check.filter(
     (F.col("claim_status") == "Denied") & (F.col("denial_reason").isNull())
 ).select("visit_id", "member_id", "claim_status").display()
-\`\`\`
+```
 
 ### 6. Gold table export (for Power BI consumption)
 I exported the Delta tables to Unity Catalog Volumes as CSV, then loaded them into Power BI Desktop using Import mode:
@@ -161,7 +161,7 @@ I exported the Delta tables to Unity Catalog Volumes as CSV, then loaded them in
 
 ## Repo Structure
 
-\`\`\`
+```
 Healthcare_RCM/
 ├── README.md
 ├── notebooks/
@@ -176,7 +176,7 @@ Healthcare_RCM/
 │   └── RCM_Project.pbix                     # Power BI Desktop file
 └── screenshots/
     └── patient_access_dashboard.png
-\`\`\`
+```
 
 ---
 
@@ -193,3 +193,4 @@ Healthcare_RCM/
 
 Built by Michael as part of an RCM/BI Developer portfolio project.
 [GitHub Repo](https://github.com/Alsse9/Healthcare_RCM)
+
