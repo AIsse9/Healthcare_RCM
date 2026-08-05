@@ -50,7 +50,8 @@ This project answers three questions a real RCM team asks:
 
 **"Eligibility & Coverage Leakage Dashboard"** — built in Power BI Desktop, Import mode, sourced from gold Delta tables exported as CSV.
 
-![Dashboard Screenshot]([screenshots/patient_access_dashboard.png](https://github.com/AIsse9/Healthcare_RCM/blob/main/preview.webp))
+![Dashboard Screenshot]([<img width="1517" height="802" alt="image" src="https://github.com/user-attachments/assets/eee628ec-f53c-4aaf-9283-fb76363a3eef" />])
+
 *(Replace the path above with your actual screenshot once added to the repo, e.g. `screenshots/patient_access_dashboard.png`)*
 
 - **KPI cards:** Total ineligible visits, total paid claims on ineligible visits, denied claims missing a reason
