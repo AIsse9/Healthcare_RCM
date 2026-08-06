@@ -191,6 +191,6 @@ Healthcare_RCM/
 
 ## Author
 
-Built by Michael as part of an RCM/BI Developer portfolio project.
+Built by Ahmed Isse as part of an RCM/BI Developer portfolio project.
 [GitHub Repo](https://github.com/Alsse9/Healthcare_RCM)
 
