@@ -186,7 +186,7 @@ Exported to Unity Catalog Volumes as CSV, loaded into Power BI Desktop using Imp
 
 Titled "Claims Denial & Financial Performance Dashboard," same Power BI Desktop / Import mode setup as Stage 1.
 
-`screenshots/denial_analysis_dashboard.png`
+![Claims Denial & Financial Performance Dashboard](denial_analysis_dashboard.png)
 
 - KPI cards: Denial Rate, Net Collection Rate, Net Claims Writeoff, Average Days in A/R
 - Funnel bar: Claimed → Allowed → Paid, showing the full dollar drop-off across the claims lifecycle
